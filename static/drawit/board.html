@@ -1,8 +1,16 @@
 <html>
   <head>
     <title> Draw It!</title>
+    <link rel="stylesheet" type="text/css" href="board.css"/>
     <script src="jquery.js"></script>
+    <script src="coffee-script.js"></script>
     <script src="board.js"></script>
+
+    <script type="text/coffeescript">
+      $(document).ready( ->
+        board = new window.Board($("#canvas"))
+      )
+    </script>
   </head>
 
   <body>
