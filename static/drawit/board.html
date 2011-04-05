@@ -5,11 +5,14 @@
     <script src="jquery.js"></script>
     <script src="coffee-script.js"></script>
     <script src="board.js"></script>
+    <script src="/drawit/a/socket.io/socket.io.js"></script>
 
-    <script type="text/coffeescript">
-      $(document).ready( ->
-        board = new window.Board($("#canvas"))
-      )
+    <script type="text/javascript">
+      $(document).ready(function () {
+        var socket = new io.Socket("do-jo.co/drawit/a/");
+        socket.connect();
+        var board = new window.Board({ canvas: $("#canvas"), socket: socket });
+      });
     </script>
   </head>
 
