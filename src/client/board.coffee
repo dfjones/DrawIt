@@ -1,8 +1,10 @@
 class Board
 
   # canvas should be a jquery node
-  constructor: (canvas) ->
-    @canvas = canvas
+  constructor: (params) ->
+    @canvas = params.canvas
+    @socket = params.socket
+    @socket.on 'message', @onMessage
     @sessionID = null
     @userID = null
     @points = []
@@ -38,6 +40,8 @@ class Board
 
   onMouseUp: (e) =>
     @drawing = false
+    @broadcast()
+    @points = []
 
   onMouseMove: (e) =>
     if @drawing
@@ -45,6 +49,15 @@ class Board
       @addPoints(@lastPos[0], @lastPos[1], e.offsetX, e.offsetY)
       @drawLine(@points, "black")
       @lastPos = [e.offsetX, e.offsetY]
+
+  onMessage: (message) =>
+    console.log message
+    if message.data and message.data.points
+      @drawLine message.data.points, "black"
+
+  broadcast: () =>
+    msg = { points: @points }
+    @socket.send msg
 
 # export to window
 window.Board = Board
