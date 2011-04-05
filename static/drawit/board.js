@@ -2,12 +2,16 @@
   var Board;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   Board = (function() {
-    function Board(canvas) {
+    function Board(params) {
+      this.broadcast = __bind(this.broadcast, this);;
+      this.onMessage = __bind(this.onMessage, this);;
       this.onMouseMove = __bind(this.onMouseMove, this);;
       this.onMouseUp = __bind(this.onMouseUp, this);;
       this.onMouseDown = __bind(this.onMouseDown, this);;
       this.drawLine = __bind(this.drawLine, this);;
-      this.addPoints = __bind(this.addPoints, this);;      this.canvas = canvas;
+      this.addPoints = __bind(this.addPoints, this);;      this.canvas = params.canvas;
+      this.socket = params.socket;
+      this.socket.on('message', this.onMessage);
       this.sessionID = null;
       this.userID = null;
       this.points = [];
@@ -46,7 +50,9 @@
       return this.lastPos = [e.offsetX, e.offsetY];
     };
     Board.prototype.onMouseUp = function(e) {
-      return this.drawing = false;
+      this.drawing = false;
+      this.broadcast();
+      return this.points = [];
     };
     Board.prototype.onMouseMove = function(e) {
       if (this.drawing) {
@@ -55,6 +61,19 @@
         this.drawLine(this.points, "black");
         return this.lastPos = [e.offsetX, e.offsetY];
       }
+    };
+    Board.prototype.onMessage = function(message) {
+      console.log(message);
+      if (message.data && message.data.points) {
+        return this.drawLine(message.data.points, "black");
+      }
+    };
+    Board.prototype.broadcast = function() {
+      var msg;
+      msg = {
+        points: this.points
+      };
+      return this.socket.send(msg);
     };
     return Board;
   })();
