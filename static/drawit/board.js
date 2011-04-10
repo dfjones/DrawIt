@@ -30,7 +30,7 @@
       var plist;
       plist = [x1, y1, x2, y2];
       this.points.push(plist);
-      return this.broadcast(plist);
+      return this.broadcast([plist]);
     };
     Board.prototype.drawLine = function(points, color) {
       var ctx, p, _i, _len, _results;
