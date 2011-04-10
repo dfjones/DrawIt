@@ -20,7 +20,9 @@ class Board
   
 
   addPoints: (x1, y1, x2, y2) =>
-    @points.push([x1, y1, x2, y2])
+    plist = [x1, y1, x2, y2]
+    @points.push(plist)
+    @broadcast(plist)
   
   drawLine: (points, color) =>
     ctx = @canvas[0].getContext("2d")
@@ -40,8 +42,6 @@ class Board
 
   onMouseUp: (e) =>
     @drawing = false
-    @broadcast()
-    @points = []
 
   onMouseMove: (e) =>
     if @drawing
@@ -55,8 +55,8 @@ class Board
     if message.data and message.data.points
       @drawLine message.data.points, "black"
 
-  broadcast: () =>
-    msg = { points: @points }
+  broadcast: (pointList) =>
+    msg = { points: pointList }
     @socket.send msg
 
 # export to window

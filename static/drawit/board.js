@@ -27,7 +27,10 @@
       this.canvas.mousemove(this.onMouseMove);
     }
     Board.prototype.addPoints = function(x1, y1, x2, y2) {
-      return this.points.push([x1, y1, x2, y2]);
+      var plist;
+      plist = [x1, y1, x2, y2];
+      this.points.push(plist);
+      return this.broadcast(plist);
     };
     Board.prototype.drawLine = function(points, color) {
       var ctx, p, _i, _len, _results;
@@ -50,9 +53,7 @@
       return this.lastPos = [e.offsetX, e.offsetY];
     };
     Board.prototype.onMouseUp = function(e) {
-      this.drawing = false;
-      this.broadcast();
-      return this.points = [];
+      return this.drawing = false;
     };
     Board.prototype.onMouseMove = function(e) {
       if (this.drawing) {
@@ -68,10 +69,10 @@
         return this.drawLine(message.data.points, "black");
       }
     };
-    Board.prototype.broadcast = function() {
+    Board.prototype.broadcast = function(pointList) {
       var msg;
       msg = {
-        points: this.points
+        points: pointList
       };
       return this.socket.send(msg);
     };
