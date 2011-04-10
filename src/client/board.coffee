@@ -22,7 +22,7 @@ class Board
   addPoints: (x1, y1, x2, y2) =>
     plist = [x1, y1, x2, y2]
     @points.push(plist)
-    @broadcast(plist)
+    @broadcast([plist])
   
   drawLine: (points, color) =>
     ctx = @canvas[0].getContext("2d")
