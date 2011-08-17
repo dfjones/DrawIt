@@ -4,6 +4,7 @@ class Board
   constructor: (params) ->
     @canvas = params.canvas
     @socket = params.socket
+    @ctx = @canvas[0].getContext("2d")
     @socket.on 'message', @onMessage
     @sessionID = null
     @userID = null
@@ -22,19 +23,18 @@ class Board
   addPoints: (x1, y1, x2, y2) =>
     plist = [x1, y1, x2, y2]
     @points.push(plist)
-    @broadcast([plist])
+    @broadcast([plist], "black")
   
   drawLine: (points, color) =>
-    ctx = @canvas[0].getContext("2d")
-    ctx.strokeStyle = color
-    ctx.lineWidth = 4.0
+    @ctx.strokeStyle = color
+    @ctx.lineWidth = 4.0
 
     for p in points
-      ctx.beginPath()
-      ctx.moveTo(p[0], p[1])
-      ctx.lineTo(p[2], p[3])
-      ctx.closePath()
-      ctx.stroke()
+      @ctx.beginPath()
+      @ctx.moveTo(p[0], p[1])
+      @ctx.lineTo(p[2], p[3])
+      @ctx.closePath()
+      @ctx.stroke()
 
   onMouseDown: (e) =>
     @drawing = true
@@ -53,10 +53,10 @@ class Board
   onMessage: (message) =>
     console.log message
     if message.data and message.data.points
-      @drawLine message.data.points, "black"
+      @drawLine message.data.points, message.data.color
 
-  broadcast: (pointList) =>
-    msg = { points: pointList }
+  broadcast: (pointList, color) =>
+    msg = { points: pointList , color: color}
     @socket.send msg
 
 # export to window
