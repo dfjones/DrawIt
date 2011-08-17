@@ -5,13 +5,20 @@
     <script src="jquery.js"></script>
     <script src="coffee-script.js"></script>
     <script src="board.js"></script>
+    <script src="tron.js"></script>
     <script src="/drawit/a/socket.io/socket.io.js"></script>
+    <script src="http://localhost:8000/socket.io/socket.io.js"></script>
 
     <script type="text/javascript">
       $(document).ready(function () {
-        var socket = new io.Socket("do-jo.co", {port: 8000});
+        //var socket = new io.Socket("do-jo.co", {port: 8000});
+        var socket = new io.Socket("localhost", {port: 8000});
         socket.connect();
         var board = new window.Board({ canvas: $("#canvas"), socket: socket });
+        //var tron = new Tron({ x: 0, y: 100, board: board });
+        //var human = new Tron({ x: 0, y: 110, board: board, human: true, "document": $(document) });
+        //window.tron = tron;
+        //window.human = human;
       });
     </script>
   </head>
@@ -22,7 +29,7 @@
     </div>
 
     <div class="canvas-container">
-      <canvas id="canvas" width="800" height="600">
+      <canvas id="canvas" width="768" height="1024">
       </canvas>
     </div>
 
