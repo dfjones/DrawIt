@@ -11,6 +11,7 @@
       this.drawLine = __bind(this.drawLine, this);;
       this.addPoints = __bind(this.addPoints, this);;      this.canvas = params.canvas;
       this.socket = params.socket;
+      this.ctx = this.canvas[0].getContext("2d");
       this.socket.on('message', this.onMessage);
       this.sessionID = null;
       this.userID = null;
@@ -30,21 +31,20 @@
       var plist;
       plist = [x1, y1, x2, y2];
       this.points.push(plist);
-      return this.broadcast([plist]);
+      return this.broadcast([plist], "black");
     };
     Board.prototype.drawLine = function(points, color) {
-      var ctx, p, _i, _len, _results;
-      ctx = this.canvas[0].getContext("2d");
-      ctx.strokeStyle = color;
-      ctx.lineWidth = 4.0;
+      var p, _i, _len, _results;
+      this.ctx.strokeStyle = color;
+      this.ctx.lineWidth = 4.0;
       _results = [];
       for (_i = 0, _len = points.length; _i < _len; _i++) {
         p = points[_i];
-        ctx.beginPath();
-        ctx.moveTo(p[0], p[1]);
-        ctx.lineTo(p[2], p[3]);
-        ctx.closePath();
-        _results.push(ctx.stroke());
+        this.ctx.beginPath();
+        this.ctx.moveTo(p[0], p[1]);
+        this.ctx.lineTo(p[2], p[3]);
+        this.ctx.closePath();
+        _results.push(this.ctx.stroke());
       }
       return _results;
     };
@@ -66,13 +66,14 @@
     Board.prototype.onMessage = function(message) {
       console.log(message);
       if (message.data && message.data.points) {
-        return this.drawLine(message.data.points, "black");
+        return this.drawLine(message.data.points, message.data.color);
       }
     };
-    Board.prototype.broadcast = function(pointList) {
+    Board.prototype.broadcast = function(pointList, color) {
       var msg;
       msg = {
-        points: pointList
+        points: pointList,
+        color: color
       };
       return this.socket.send(msg);
     };
