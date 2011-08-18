@@ -19,7 +19,7 @@ class Board
     #@canvas.mouseup(@onMouseUp)
     #@canvas.mousemove(@onMouseMove)
 
-    touch = @canvas.Touchable()
+    touch = @canvas.Hoverable()
 
     touch.bind 'tap', @onMouseDown
     touch.bind 'touchablemove', @onTouch
