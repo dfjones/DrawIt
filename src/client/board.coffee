@@ -15,9 +15,16 @@ class Board
     @lastPos = {x: -1, y: -1}
     
     # register events
-    @canvas.mousedown(@onMouseDown)
-    @canvas.mouseup(@onMouseUp)
-    @canvas.mousemove(@onMouseMove)
+    #@canvas.mousedown(@onMouseDown)
+    #@canvas.mouseup(@onMouseUp)
+    #@canvas.mousemove(@onMouseMove)
+
+    touch = @canvas.Touchable()
+
+    touch.bind 'tap', @onMouseDown
+    touch.bind 'touchablemove', @onTouch
+    touch.bind 'touchableend', @onMouseUp
+
   
 
   addPoints: (x1, y1, x2, y2) =>
@@ -42,6 +49,15 @@ class Board
 
   onMouseUp: (e) =>
     @drawing = false
+
+  onTouch: (e, touch) =>
+    if @drawing
+      x = touch.currentTouch.x
+      y = touch.currentTouch.y
+      console.log("x: " + x + " y: " + y)
+      @addPoints(@lastPos[0], @lastPos[1], x, y)
+      @drawLine(@points, "black")
+      @lastPos = [x, y]
 
   onMouseMove: (e) =>
     if @drawing

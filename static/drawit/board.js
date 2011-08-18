@@ -6,10 +6,12 @@
       this.broadcast = __bind(this.broadcast, this);;
       this.onMessage = __bind(this.onMessage, this);;
       this.onMouseMove = __bind(this.onMouseMove, this);;
+      this.onTouch = __bind(this.onTouch, this);;
       this.onMouseUp = __bind(this.onMouseUp, this);;
       this.onMouseDown = __bind(this.onMouseDown, this);;
       this.drawLine = __bind(this.drawLine, this);;
-      this.addPoints = __bind(this.addPoints, this);;      this.canvas = params.canvas;
+      this.addPoints = __bind(this.addPoints, this);;      var touch;
+      this.canvas = params.canvas;
       this.socket = params.socket;
       this.ctx = this.canvas[0].getContext("2d");
       this.socket.on('message', this.onMessage);
@@ -23,9 +25,10 @@
         x: -1,
         y: -1
       };
-      this.canvas.mousedown(this.onMouseDown);
-      this.canvas.mouseup(this.onMouseUp);
-      this.canvas.mousemove(this.onMouseMove);
+      touch = this.canvas.Touchable();
+      touch.bind('tap', this.onMouseDown);
+      touch.bind('touchablemove', this.onTouch);
+      touch.bind('touchableend', this.onMouseUp);
     }
     Board.prototype.addPoints = function(x1, y1, x2, y2) {
       var plist;
@@ -54,6 +57,17 @@
     };
     Board.prototype.onMouseUp = function(e) {
       return this.drawing = false;
+    };
+    Board.prototype.onTouch = function(e, touch) {
+      var x, y;
+      if (this.drawing) {
+        x = touch.currentTouch.x;
+        y = touch.currentTouch.y;
+        console.log("x: " + x + " y: " + y);
+        this.addPoints(this.lastPos[0], this.lastPos[1], x, y);
+        this.drawLine(this.points, "black");
+        return this.lastPos = [x, y];
+      }
     };
     Board.prototype.onMouseMove = function(e) {
       if (this.drawing) {

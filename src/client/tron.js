@@ -4,11 +4,12 @@
   Tron = (function() {
     Tron.prototype.timeout = 30;
     Tron.prototype.speed = 3;
-    Tron.prototype.length = 20;
+    Tron.prototype.length = 60;
     Tron.prototype.colors = {
       human: "blue",
       cpu: "red"
     };
+    Tron.prototype.clear_color = "rgba(255,255,255,1)";
     Tron.prototype.getRandomInt = function(min, max) {
       return Math.floor(Math.random() * (max - min + 1)) + min;
     };
@@ -18,7 +19,7 @@
       this.nextCoord = __bind(this.nextCoord, this);;
       this.animate = __bind(this.animate, this);;      this.position = [params.x, params.y];
       this.direction = 90;
-      this.trail = [];
+      this.trail = [[params.x, params.y]];
       this.board = params.board;
       if (params.human) {
         params.document.keydown(this.onKeydown);
@@ -33,9 +34,11 @@
       var end, points, x, y, _ref;
       _ref = this.nextCoord(), x = _ref[0], y = _ref[1];
       this.trail.push([x, y]);
-      if (this.trail.length >= length) {
+      if (this.trail.length >= this.length) {
         end = this.trail.shift();
-        this.board.drawLine([end[0], end[1], this.trail[0][0], this.trail[0][1]], "white");
+        points = [end[0], end[1], this.trail[0][0], this.trail[0][1]];
+        this.board.drawLine([points], this.clear_color);
+        this.board.broadcast([points], this.clear_color);
       }
       points = [this.position[0], this.position[1], x, y];
       this.board.drawLine([points], this.color);
