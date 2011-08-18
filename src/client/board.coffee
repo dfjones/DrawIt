@@ -12,7 +12,7 @@ class Board
     @color = "rgba(255,0,0,3)"
     @drawPoints = null
     @drawing = false
-    @lastPos = {x: -1, y: -1}
+    @lastPos = [-1, -1]
     
     # register events
     #@canvas.mousedown(@onMouseDown)
@@ -21,7 +21,7 @@ class Board
 
     touch = @canvas.Hoverable()
 
-    touch.bind 'tap', @onMouseDown
+    touch.bind 'tap', @onTap
     touch.bind 'touchablemove', @onTouch
     touch.bind 'touchableend', @onMouseUp
 
@@ -49,6 +49,10 @@ class Board
 
   onMouseUp: (e) =>
     @drawing = false
+
+  onTap: (e, touch) =>
+    @drawing = true
+    @lastPos = [touch.startTouch.x, touch.startTouch.y]
 
   onTouch: (e, touch) =>
     if @drawing

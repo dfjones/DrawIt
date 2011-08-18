@@ -7,6 +7,7 @@
       this.onMessage = __bind(this.onMessage, this);;
       this.onMouseMove = __bind(this.onMouseMove, this);;
       this.onTouch = __bind(this.onTouch, this);;
+      this.onTap = __bind(this.onTap, this);;
       this.onMouseUp = __bind(this.onMouseUp, this);;
       this.onMouseDown = __bind(this.onMouseDown, this);;
       this.drawLine = __bind(this.drawLine, this);;
@@ -21,12 +22,9 @@
       this.color = "rgba(255,0,0,3)";
       this.drawPoints = null;
       this.drawing = false;
-      this.lastPos = {
-        x: -1,
-        y: -1
-      };
+      this.lastPos = [-1, -1];
       touch = this.canvas.Hoverable();
-      touch.bind('tap', this.onMouseDown);
+      touch.bind('tap', this.onTap);
       touch.bind('touchablemove', this.onTouch);
       touch.bind('touchableend', this.onMouseUp);
     }
@@ -57,6 +55,10 @@
     };
     Board.prototype.onMouseUp = function(e) {
       return this.drawing = false;
+    };
+    Board.prototype.onTap = function(e, touch) {
+      this.drawing = true;
+      return this.lastPos = [touch.startTouch.x, touch.startTouch.y];
     };
     Board.prototype.onTouch = function(e, touch) {
       var x, y;
