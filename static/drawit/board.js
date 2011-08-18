@@ -4,8 +4,11 @@
   Board = (function() {
     function Board(params) {
       this.broadcast = __bind(this.broadcast, this);;
+      this.sendClear = __bind(this.sendClear, this);;
       this.onMessage = __bind(this.onMessage, this);;
       this.onMouseMove = __bind(this.onMouseMove, this);;
+      this.clear = __bind(this.clear, this);;
+      this.onClear = __bind(this.onClear, this);;
       this.onTouch = __bind(this.onTouch, this);;
       this.onTap = __bind(this.onTap, this);;
       this.onMouseUp = __bind(this.onMouseUp, this);;
@@ -23,6 +26,7 @@
       this.drawPoints = null;
       this.drawing = false;
       this.lastPos = [-1, -1];
+      params.clearButton.click(this.onClear);
       touch = this.canvas.Hoverable();
       touch.bind('tap', this.onTap);
       touch.bind('touchablemove', this.onTouch);
@@ -35,19 +39,18 @@
       return this.broadcast([plist], "black");
     };
     Board.prototype.drawLine = function(points, color) {
-      var p, _i, _len, _results;
+      var p, _i, _len;
       this.ctx.strokeStyle = color;
       this.ctx.lineWidth = 4.0;
-      _results = [];
       for (_i = 0, _len = points.length; _i < _len; _i++) {
         p = points[_i];
         this.ctx.beginPath();
         this.ctx.moveTo(p[0], p[1]);
         this.ctx.lineTo(p[2], p[3]);
+        this.ctx.stroke();
         this.ctx.closePath();
-        _results.push(this.ctx.stroke());
       }
-      return _results;
+      return this.points = [];
     };
     Board.prototype.onMouseDown = function(e) {
       this.drawing = true;
@@ -71,6 +74,13 @@
         return this.lastPos = [x, y];
       }
     };
+    Board.prototype.onClear = function(e) {
+      this.clear();
+      return this.sendClear();
+    };
+    Board.prototype.clear = function() {
+      return this.ctx.clearRect(0, 0, this.canvas.width(), this.canvas.height());
+    };
     Board.prototype.onMouseMove = function(e) {
       if (this.drawing) {
         console.log("x: " + e.offsetX + " y: " + e.offsetY);
@@ -83,7 +93,16 @@
       console.log(message);
       if (message.data && message.data.points) {
         return this.drawLine(message.data.points, message.data.color);
+      } else if (message.data && message.data.clear) {
+        return this.clear();
       }
+    };
+    Board.prototype.sendClear = function() {
+      var msg;
+      msg = {
+        clear: true
+      };
+      return this.socket.send(msg);
     };
     Board.prototype.broadcast = function(pointList, color) {
       var msg;

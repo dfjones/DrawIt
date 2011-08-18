@@ -13,6 +13,8 @@ class Board
     @drawPoints = null
     @drawing = false
     @lastPos = [-1, -1]
+
+    params.clearButton.click(@onClear)
     
     # register events
     #@canvas.mousedown(@onMouseDown)
@@ -40,8 +42,9 @@ class Board
       @ctx.beginPath()
       @ctx.moveTo(p[0], p[1])
       @ctx.lineTo(p[2], p[3])
-      @ctx.closePath()
       @ctx.stroke()
+      @ctx.closePath()
+    @points = []
 
   onMouseDown: (e) =>
     @drawing = true
@@ -63,6 +66,13 @@ class Board
       @drawLine(@points, "black")
       @lastPos = [x, y]
 
+  onClear: (e) =>
+    @clear()
+    @sendClear()
+
+  clear: () =>
+    @ctx.clearRect(0, 0, @canvas.width(), @canvas.height())
+
   onMouseMove: (e) =>
     if @drawing
       console.log("x: " + e.offsetX + " y: " + e.offsetY)
@@ -74,6 +84,12 @@ class Board
     console.log message
     if message.data and message.data.points
       @drawLine message.data.points, message.data.color
+    else if message.data and message.data.clear
+      @clear()
+
+  sendClear: () =>
+    msg = { clear: true }
+    @socket.send msg
 
   broadcast: (pointList, color) =>
     msg = { points: pointList , color: color}

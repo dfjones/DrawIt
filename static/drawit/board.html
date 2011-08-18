@@ -16,9 +16,12 @@
         //var socket = new io.Socket("do-jo.co", {port: 8000});
         var socket = new io.Socket("localhost", {port: 8000});
         socket.connect();
-        var board = new window.Board({ canvas: $("#canvas"), socket: socket });
+        var board = new window.Board({ canvas: $("#canvas"), 
+          clearButton: $("#clearButton"),
+          socket: socket });
         //var tron = new Tron({ x: 0, y: 100, board: board });
         //var human = new Tron({ x: 0, y: 110, board: board, human: true, "document": $(document) });
+        window.board = board;
         //window.tron = tron;
         //window.human = human;
       });
@@ -33,6 +36,9 @@
     <div class="canvas-container">
       <canvas id="canvas" width="768" height="1024">
       </canvas>
+    </div>
+    <div>
+      <button id="clearButton">Clear</button>
     </div>
 
   </body>
