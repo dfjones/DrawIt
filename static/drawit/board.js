@@ -25,7 +25,7 @@
         x: -1,
         y: -1
       };
-      touch = this.canvas.Touchable();
+      touch = this.canvas.Hoverable();
       touch.bind('tap', this.onMouseDown);
       touch.bind('touchablemove', this.onTouch);
       touch.bind('touchableend', this.onMouseUp);
