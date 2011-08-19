@@ -100,7 +100,7 @@
         case 37:
           this.direction = 270;
       }
-      return e.halt();
+      return e.preventDefault();
     };
     return Tron;
   })();

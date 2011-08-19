@@ -75,6 +75,6 @@ class Tron
       when 39 then @direction = 90
       when 40 then @direction = 180
       when 37 then @direction = 270
-    e.halt()
+    e.preventDefault()
 
 window.Tron = Tron
