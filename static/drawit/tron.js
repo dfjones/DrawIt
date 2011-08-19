@@ -89,14 +89,18 @@
     Tron.prototype.onKeydown = function(e) {
       switch (e.keyCode) {
         case 38:
-          return this.direction = 0;
+          this.direction = 0;
+          break;
         case 39:
-          return this.direction = 90;
+          this.direction = 90;
+          break;
         case 40:
-          return this.direction = 180;
+          this.direction = 180;
+          break;
         case 37:
-          return this.direction = 270;
+          this.direction = 270;
       }
+      return e.halt();
     };
     return Tron;
   })();
